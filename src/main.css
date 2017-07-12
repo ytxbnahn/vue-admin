@@ -1,0 +1,89 @@
+html,body{
+  font-family:"Microsoft YaHei",微软雅黑,"MicrosoftJhengHei",华文细黑,STHeiti,MingLiu;
+  -webkit-overflow-scrolling: touch;
+}
+.nav li.current-page {
+  background-color: rgba(0, 0, 0, 0);
+}
+
+.nav li li.current-page a {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.nav.child_menu li:hover, .nav.child_menu li.active a {
+  color: #f0f0f0;
+}
+
+.modal-footer .btn {
+  margin: 0;
+}
+
+.el-form {
+  width: 100%;
+}
+
+.el-form label {
+  margin-bottom: 0;
+}
+
+.el-form .el-input-number {
+  width: 100%;
+}
+
+/* x_title下的span是灰色 ，这里控制按钮的span是白色 */
+.x_title .el-button--info:not(.is-plain) > span, .x_title .el-button--primary:not(.is-plain) > span {
+  color: #FFF;
+}
+
+.x_title .is-plain > span {
+  color: #000;
+}
+
+.x_title .el-button--danger > span {
+  color: #FFF;
+}
+
+.el-form-wrapper {
+  padding: 20px;
+}
+
+/* table下的span有line-height,这里设置不让按钮撑开 */
+td > .el-button > span {
+  line-height: 0;
+}
+
+/* 处理 Radio Button 间隔线问题 */
+.el-radio-button:not(:last-child) {
+  margin-right: 0;
+}
+
+/** 处理表格按钮间隔问题 */
+.table .el-button + .el-button {
+  margin-left: 0;
+}
+
+/** 处理 Radio Group 高度问题 */
+.modal-dialog .el-radio-group {
+  display: block;
+}
+
+/* el-table 列有button的时候会撑大问题 */
+.el-table tbody tr td span {
+  line-height: 0;
+}
+
+.el-progress-bar__inner {
+  transition: all .1s;
+}
+
+.statics-server .el-card__header,.statics-files .el-card__header {
+  padding: 18px 20px 0;
+  border-bottom: none;
+}
+.statics-server .el-card__body,.statics-files .el-card__body {
+  padding: 0px 20px 20px;
+}
+
+.x_breadcrumb {
+  padding: 5px 0;
+}
