@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import VueAxios from 'vue-axios'
 import App from './App'
 import Index from './components/Index'
+import Menu from './components/Menu'
 import Example from './components/Example'
 import Hello from './components/Hello'
 import Role from './components/Role'
@@ -17,7 +18,7 @@ require('bootstrap/dist/css/bootstrap.min.css')
 require('font-awesome/css/font-awesome.css')
 require('gentelella/production/less/custom.css')
 require('element-ui/lib/theme-default/index.css')
-require('./main.css')
+require('./css/main.css')
 
 Vue.use(VueRouter)
 Vue.use(ElementUI)
@@ -26,6 +27,7 @@ Vue.use(VueAxios, axios)
 const router = new VueRouter({
   routes: [
     { path: '/', component: Index },
+    { path: '/menu', component: Menu },
     { path: '/example', component: Example },
     { path: '/hello', component: Hello },
     { path: '/echarts', component: Echarts },
@@ -46,7 +48,7 @@ router.beforeEach(
       next('/login')
       return
     }
-    // document.body.style.backgroundColor = '#2A3F54'
+    document.body.style.backgroundColor = '#F7F7F7'
     next()
   }
 )

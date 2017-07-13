@@ -14,7 +14,7 @@ export default {
   },
 
   login (context, creds, callback) {
-    const OAUTH_TOKEN_URL = 'admin/login'
+    const OAUTH_TOKEN_URL = 'login'
     const credsString = `email=${creds.username}&password=${creds.password}`
     const url = `${OAUTH_TOKEN_URL}?${credsString}`
 
@@ -68,7 +68,7 @@ export default {
     this.user.authenticated = !!accessToken
     this.user.username = lscache.get('')
 
-    Vue.axios.defaults.baseURL = '/api/'
+    Vue.axios.defaults.baseURL = '/admin/'
     Vue.axios.defaults.headers.common.Authorization = accessToken ? `${accessToken}` : ''
 
     if (!this.authenticated) {
@@ -97,7 +97,7 @@ export default {
   },
 
   loadRoles (callback) {
-    Vue.axios.get('admin/login?token=51778a6b1b0f4cee10ba00ed19b5a983', {
+    Vue.axios.get('login', {
       params: {
         username: lscache.get('username'),
         size: 10000

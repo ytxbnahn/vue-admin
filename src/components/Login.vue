@@ -4,10 +4,10 @@
         <h2>用户登录</h2>
         <el-form :model="loginForm" :rules="rules" ref="loginForm" label-width="80px">
           <el-form-item prop="username">
-            <el-input v-model="loginForm.username" placeholder="用户名" ></el-input>
+            <el-input v-model="loginForm.username" @keyup.enter.native="login('loginForm')" placeholder="用户名" ></el-input>
           </el-form-item>
           <el-form-item prop="password">
-            <el-input v-model="loginForm.password" type="password" placeholder="密码"></el-input>
+            <el-input v-model="loginForm.password" @keyup.enter.native="login('loginForm')" type="password" placeholder="密码"></el-input>
           </el-form-item>
           <el-button type="primary" class="submit-btn" @click="login('loginForm')">登陆</el-button>
         </el-form>
@@ -28,58 +28,9 @@
      </div>  -->
   </div>
 </template>
-<style>
-.login-page {
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  left: 0;
-  top: 0;
-  background: url("../assets/bg1.jpg") center center / cover no-repeat fixed;
-}
-  .login-bg{
-    padding-top: 200px;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0,0,0,.5);
-  }
-  form{
-    padding: 20px 30px 20px 30px;
-  }
-  .account-container {
-    position: relative;
-    z-index: 1001;
-    width: 450px;
-    margin-left: auto;
-    margin-right: auto;
-    padding: 30px 40px 40px;
-    border-radius: 10px;
-    background-color: #fff;
-}
-.account-container h2 {
-    margin: 0 0 25px;
-    font-size: 25px;
-    font-weight: 400;
-    text-align: center;
-    color: #323a45;
-}
-  .account-container .account-input input{
-    width: 308px !important;
-  }
-  .account-container button{
-    width: 308px !important;
-  }
-  .f-item{
-    margin-bottom: 15px;
-  }
-  .el-form-item__content{
-    margin-left: 0 !important;
-  }
-  .el-button .submit-btn{
-    margin-top: 50px;
-  }
-</style>
+
 <script>
+require('../css/login.css')
 
 import auth from '../auth'
 import series from 'async/series'
@@ -107,6 +58,9 @@ export default {
     }
   },
   mounted () {
+    if (auth.isAuthenticated()) {
+      this.$router.push('/')
+    }
   },
   methods: {
     login (formName) {

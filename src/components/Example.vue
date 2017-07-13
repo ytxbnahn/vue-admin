@@ -201,7 +201,7 @@
 				<div style="margin: 20px 0;"></div>
 				<el-input placeholder="请输入内容" v-model="input1" :disabled="true"></el-input>
 				<div style="margin: 20px 0;"></div>
-				<el-input placeholder="请选择日期" icon="search" v-model="input2" :on-icon-click="handleIconClick"></el-input>
+				<el-input placeholder="请选择日期" icon="search" v-model="input2" </el-input>
 			</div>
 			<div class="block">
 				<h4>textarea文本域</h4>
@@ -664,7 +664,7 @@
 </template>
 
 <script>
-  require('../example.css')
+  require('../css/example.css')
   const cityOptions = ['上海', '北京', '广州', '深圳']
   export default {
     data () {
@@ -689,6 +689,7 @@
         textarea2: '',
         textarea3: '',
         radio: '1',
+        radio1: '',
         radio3: '上海',
         radio4: '上海',
         radio5: '上海',
