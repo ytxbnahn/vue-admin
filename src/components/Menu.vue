@@ -5,7 +5,7 @@
       <el-button type="info" @click="dialogFormVisible = true">
         <i class="el-icon-plus"></i>添加菜单
       </el-button>
-      <el-button type="danger" icon="delete">删除菜单</el-button>
+      <el-button type="danger" icon="delete" @click="deleteMenus()">删除菜单</el-button>
     </div>
     <el-tree
       class="filter-tree"
@@ -17,31 +17,31 @@
       :filter-node-method="filterNode"
       ref="menustree">
     </el-tree>
-    <el-dialog title="添加菜单" :visible.sync="dialogFormVisible">
-      <el-form :label-position="labelPosition" label-width="80px"  :model="form">
+    <el-dialog class="menus-dialog" title="添加菜单" :visible.sync="dialogFormVisible">
+      <el-form :label-position="labelPosition" ref="menuForm" label-width="80px" >
         <el-form-item label="父菜单">
-          <el-select v-model="value8" clearable filterable placeholder="请选择">
+          <el-select v-model="selectValue" clearable filterable placeholder="请选择">
             <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
+              v-for="item in menusSelect"
+              :key="item.id"
+              :label="item.menuname"
+              :value="item.id">
             </el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="菜单名称">
-          <el-input v-model="filterText"></el-input>
+          <el-input v-model="menuNameValue" @keyup.enter.native="addMenu('menuForm')"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+        <el-button type="primary" @click="addMenu('menuForm')">确 定</el-button>
       </div>
     </el-dialog>
  </div>
 </template>
 
-<style>
+<style scoped>
   .query-head{
     margin-top: 20px;
   }
@@ -74,9 +74,15 @@
   .container .el-select{
     width: 100%;
   }
+  
   .el-pagination{
     margin: 20px 0;
     text-align: right;
+  }
+
+  /* pri */
+  .container .menus-dialog .el-dialog{
+    max-width: 500px;
   }
 </style>
 
@@ -92,12 +98,56 @@
         if (!value) return true;
         return data.menuname.indexOf(value) !== -1;
       },
+      deleteMenus() {
+        var that = this
+        let checkedNodes = this.$refs.menustree.getCheckedNodes()
+        if (!checkedNodes.length) {
+          that.$message({
+            message: '请选择您要删除的菜单',
+            type: 'info'
+          })
+          return
+        }
+        let deleteIDs = []
+        $.each(checkedNodes, function(index, val) {
+          deleteIDs.push(val.id)
+        })
+        console.log(deleteIDs)
+        this.$confirm('是否确认删除菜单?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.axios.put('menusdel',{id: JSON.stringify(deleteIDs)})
+            .then(function(res) {
+              if (res.data.success) {
+                that.getMenus()
+                this.$message({
+                  type: 'success',
+                  message: '删除成功!'
+                });
+              } else {
+                that.$message({
+                  message: res.data.msg,
+                  type: 'error'
+                })
+              }
+            })
+            .catch(function(error) {
+              console.log(error)
+            })
+        }).catch(() => {
+        });
+      },
       getMenus() {
         var that = this
         this.axios.get('menus')
           .then(function(res) {
             if (res.data.success) {
               that.menusData = res.data.info
+              let selectData = JSON.stringify(res.data.info)
+              that.menusSelect = JSON.parse(selectData)
+              that.menusSelect.unshift({id: 0,menuname: '根菜单'})
             }else{
               that.$message({
                 message: res.data.msg,
@@ -108,6 +158,34 @@
           .catch(function(error) {
             console.log(error)
           })
+      },
+      addMenu(formName) {
+        var that = this
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            this.axios.post('menus', {
+                id: that.selectValue,
+                menuname: that.menuNameValue
+              })
+              .then(function(res) {
+                if (res.data.success) {
+                  that.dialogFormVisible = false
+                  that.getMenus()
+                  this.$refs[formName].resetFields()
+                } else {
+                  that.$message({
+                    message: res.data.msg,
+                    type: 'error'
+                  })
+                }
+              })
+              .catch(function(error) {
+                console.log(error)
+              })
+          } else {
+            return false;
+          }
+        })
       }
     },
     mounted () {
@@ -116,40 +194,16 @@
     data() {
       return {
         filterText: '',
+        menuNameValue: '',
         menusData: [],
+        menusSelect: [],
         defaultProps: {
           children: 'child',
           label: 'menuname'
         },
         labelPosition: 'left',
         dialogFormVisible: false,
-        form: {
-          name: '',
-          region: '',
-          date1: '',
-          date2: '',
-          delivery: false,
-          type: [],
-          resource: '',
-          desc: ''
-        },
-        options: [{
-          value: '选项1',
-          label: '黄金糕1111111111111111111112'
-        }, {
-          value: '选项2',
-          label: '双皮奶'
-        }, {
-          value: '选项3',
-          label: '蚵仔煎'
-        }, {
-          value: '选项4',
-          label: '龙须面'
-        }, {
-          value: '选项5',
-          label: '北京烤鸭'
-        }],
-        value8: ''
+        selectValue: ''
       }
     }
   };
