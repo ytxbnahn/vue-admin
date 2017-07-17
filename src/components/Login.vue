@@ -12,20 +12,6 @@
           <el-button type="primary" class="submit-btn" @click="login('loginForm')">登陆</el-button>
         </el-form>
     </div>
-   <!--   <div class="account-about ng-scope">
-       <span>Copyright&nbsp;&nbsp;©&nbsp;2017&nbsp;Coding.net&nbsp;&nbsp;</span>
-       <a href="/">首页</a>
-       <a href="/about">关于 Coding</a>
-       <a href="/jobs">招贤纳士</a>
-       <a href="/terms">服务条款</a>
-       <a href="/privacy">隐私策略</a>
-       <a href="help">帮助中心</a>
-       <a href="https://blog.coding.net/">Blog</a>
-       <a href="/app">App</a>
-       <a cg-jump-out-angular-href="/shop" href="/shop">Shop</a>
-       <a href="https://mart.coding.net" style="font-weight: bold;">码市</a>
-       <a class="photo-by ng-binding" ng-href="http://eput.com/kevinmark3" target="_blank" href="http://eput.com/kevinmark3">Photo by KevinMark3</a>
-     </div>  -->
   </div>
 </template>
 

@@ -38,12 +38,13 @@
   .account-container button{
     width: 308px !important;
   }
-  .f-item{
+
+  .login-bg .f-item{
     margin-bottom: 15px;
   }
-  .el-form-item__content{
+  .login-bg .el-form-item__content{
     margin-left: 0 !important;
   }
-  .el-button .submit-btn{
+  .login-bg .el-button .submit-btn{
     margin-top: 50px;
   }

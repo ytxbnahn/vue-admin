@@ -2,14 +2,8 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import VueAxios from 'vue-axios'
 import App from './App'
-import Index from './components/Index'
-import Menu from './components/Menu'
-import Example from './components/Example'
-import Hello from './components/Hello'
-import Role from './components/Role'
-import Echarts from './components/Echarts'
-import Login from './components/Login'
 import ElementUI from 'element-ui'
+import routes from './routes'
 import auth from './auth'
 import axios from 'axios'
 import PromiseFinally from 'promise.prototype.finally'
@@ -25,15 +19,7 @@ Vue.use(ElementUI)
 Vue.use(VueAxios, axios)
 
 const router = new VueRouter({
-  routes: [
-    { path: '/', component: Index },
-    { path: '/menu', component: Menu },
-    { path: '/example', component: Example },
-    { path: '/hello', component: Hello },
-    { path: '/echarts', component: Echarts },
-    { path: '/login', component: Login },
-    { path: '/role', component: Role }
-  ]
+  routes
 })
 
 router.beforeEach(

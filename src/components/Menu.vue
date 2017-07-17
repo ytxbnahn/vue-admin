@@ -1,54 +1,78 @@
 <template>
   <div class="container">
     <div class="query-head">
-      <el-row :gutter="20">
-        <el-col>
-          <el-input v-model="input" placeholder="菜单名称"></el-input>
-        </el-col>
-        <el-col>
-          <el-button type="primary" icon="search">查询</el-button>
-        </el-col>
-      </el-row>
+      <el-input placeholder="输入关键字进行过滤" v-model="filterText"></el-input>
+      <el-button type="info" @click="dialogFormVisible = true">
+        <i class="el-icon-plus"></i>添加菜单
+      </el-button>
+      <el-button type="danger" icon="delete">删除菜单</el-button>
     </div>
-    <el-table :data="menusData" stripe style="width: 100%">
-      <el-table-column type="expand" >
-        <template scope="props">
-          <el-form label-position="left" inline class="demo-table-expand" v-for="menuItem in menusData" v-bind:todo="menuItem" v-bind:key="menuItem.id">
-            <el-form-item label="菜单权限" v-for="item in menuItem.child" v-bind:todo="item" v-bind:key="item.id">
-            <!-- <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox> -->
-              <el-checkbox v-model="checked" class="first">{{ item.menuname }}</el-checkbox>
-              
-            </el-form-item>
-          </el-form>
-        </template>
-      </el-table-column>
-      <el-table-column label="菜单ID" prop="id">
-      </el-table-column>
-      <el-table-column label="菜单名称" prop="menuname">
-      </el-table-column>
-      <el-table-column label="" width="120px" align="center" >
-        <template scope="scope">
-          <el-button type="danger" icon="delete" size="small">删除</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-    <el-pagination :current-page="currentPage4" :page-sizes="[100, 200, 300, 400]" :page-size="100" layout="total, sizes, prev, pager, next, jumper" :total="400">
-    </el-pagination>
+    <el-tree
+      class="filter-tree"
+      show-checkbox
+      :data="menusData"
+      :props="defaultProps"
+      default-expand-all
+      highlight-current
+      :filter-node-method="filterNode"
+      ref="menustree">
+    </el-tree>
+    <el-dialog title="添加菜单" :visible.sync="dialogFormVisible">
+      <el-form :label-position="labelPosition" label-width="80px"  :model="form">
+        <el-form-item label="父菜单">
+          <el-select v-model="value8" clearable filterable placeholder="请选择">
+            <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="菜单名称">
+          <el-input v-model="filterText"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+      </div>
+    </el-dialog>
  </div>
 </template>
 
 <style>
+  .query-head{
+    margin-top: 20px;
+  }
   .query-head .el-row{
     margin-bottom: 0px;
   }
-  .query-head .el-row .el-col{
+  .query-head .el-input{
     width: 20%;
-    min-width: 120px;
+    min-width: 150px;
     max-width: 300px;
     margin-bottom: 20px;
+    margin-right: 10px;
   }
-  .query-head{
-    margin-top: 20px;
+  .query-head .el-button{
+    margin-bottom: 20px;
+    margin-right: 10px;
+  }
+  .query-head .el-button+.el-button{
+    margin-left: 0px;
+  }
+  .query-head .el-button i{
+    margin-right: 5px;
+  }
+  .query-head .el-button span{
+    margin-left: 0 !important;
+  }
+  .container form{
+    padding: 0;
+  }
+  .container .el-select{
+    width: 100%;
   }
   .el-pagination{
     margin: 20px 0;
@@ -58,51 +82,16 @@
 
 <script>
   export default {
-    data () {
-      return {
-        input: '',
-        checked: true,
-        currentPage4: 4,
-        menusData: [],
-        tableData5: [{
-          id: '超级管理员',
-          name: 'ROLE_0',
-          category: '江浙零食',
-          desc: '荷兰优质淡',
-          address: '陀区真北路',
-          shop: '王小虎夫妻店',
-          shopId: '10333'
-        }, {
-          id: '管理员',
-          name: 'ROLE_1',
-          category: '江浙零食',
-          desc: '荷兰优质淡',
-          address: '陀区真北路',
-          shop: '王小虎夫妻店',
-          shopId: '10333'
-        }, {
-          id: '电台用户',
-          name: 'ROLE_2',
-          category: '江浙零食',
-          desc: '荷兰优质淡',
-          address: '陀区真北路',
-          shop: '王小虎夫妻店',
-          shopId: '10333'
-        }, {
-          id: '普通用户',
-          name: 'ROLE_3',
-          category: '江浙零食',
-          desc: '荷兰优质淡',
-          address: '陀区真北路',
-          shop: '王小虎夫妻店',
-          shopId: '10333'
-        }]
+    watch: {
+      filterText(val) {
+        this.$refs.menustree.filter(val);
       }
     },
-    mounted () {
-      this.getMenus()
-    },
     methods: {
+      filterNode(value, data) {
+        if (!value) return true;
+        return data.menuname.indexOf(value) !== -1;
+      },
       getMenus() {
         var that = this
         this.axios.get('menus')
@@ -120,6 +109,48 @@
             console.log(error)
           })
       }
+    },
+    mounted () {
+      this.getMenus()
+    },
+    data() {
+      return {
+        filterText: '',
+        menusData: [],
+        defaultProps: {
+          children: 'child',
+          label: 'menuname'
+        },
+        labelPosition: 'left',
+        dialogFormVisible: false,
+        form: {
+          name: '',
+          region: '',
+          date1: '',
+          date2: '',
+          delivery: false,
+          type: [],
+          resource: '',
+          desc: ''
+        },
+        options: [{
+          value: '选项1',
+          label: '黄金糕1111111111111111111112'
+        }, {
+          value: '选项2',
+          label: '双皮奶'
+        }, {
+          value: '选项3',
+          label: '蚵仔煎'
+        }, {
+          value: '选项4',
+          label: '龙须面'
+        }, {
+          value: '选项5',
+          label: '北京烤鸭'
+        }],
+        value8: ''
+      }
     }
-  }
+  };
 </script>

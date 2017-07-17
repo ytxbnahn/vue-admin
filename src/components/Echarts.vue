@@ -34,7 +34,7 @@
 </style>
 <script>
   import $ from 'jquery'
-  /*import echarts from 'echarts'*/
+  import echarts from 'echarts'
 
   export default {
     data () {
