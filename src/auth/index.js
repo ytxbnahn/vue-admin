@@ -67,7 +67,6 @@ export default {
     const accessToken = lscache.get('accessToken')
     this.user.authenticated = !!accessToken
     this.user.username = lscache.get('')
-
     Vue.axios.defaults.baseURL = '/admin/'
     Vue.axios.defaults.headers.common.Authorization = accessToken ? `${accessToken}` : ''
 

@@ -1,5 +1,10 @@
 <template>
   <div class="container">
+    <!-- <el-breadcrumb separator="/">
+      <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+      <el-breadcrumb-item>系统管理</el-breadcrumb-item>
+      <el-breadcrumb-item>菜单管理</el-breadcrumb-item>
+    </el-breadcrumb> -->
     <div class="query-head">
       <el-input placeholder="输入关键字进行过滤" v-model="filterText"></el-input>
       <el-button type="info" @click="dialogFormVisible = true">
@@ -15,10 +20,10 @@
       default-expand-all
       highlight-current
       :filter-node-method="filterNode"
-      ref="menustree">
+      ref="menustree" :render-content="renderContent">
     </el-tree>
     <el-dialog class="menus-dialog" title="添加菜单" :visible.sync="dialogFormVisible">
-      <el-form :label-position="labelPosition" ref="menuForm" label-width="80px" >
+      <el-form :label-position="'left'" ref="menuForm" label-width="80px" >
         <el-form-item label="父菜单">
           <el-select v-model="selectValue" clearable filterable placeholder="请选择">
             <el-option
@@ -41,63 +46,42 @@
  </div>
 </template>
 
-<style scoped>
-  .query-head{
-    margin-top: 20px;
-  }
-  .query-head .el-row{
-    margin-bottom: 0px;
-  }
-  .query-head .el-input{
-    width: 20%;
-    min-width: 150px;
-    max-width: 300px;
-    margin-bottom: 20px;
-    margin-right: 10px;
-  }
-  .query-head .el-button{
-    margin-bottom: 20px;
-    margin-right: 10px;
-  }
-  .query-head .el-button+.el-button{
-    margin-left: 0px;
-  }
-  .query-head .el-button i{
-    margin-right: 5px;
-  }
-  .query-head .el-button span{
-    margin-left: 0 !important;
-  }
-  .container form{
-    padding: 0;
-  }
-  .container .el-select{
-    width: 100%;
-  }
-  
-  .el-pagination{
-    margin: 20px 0;
-    text-align: right;
-  }
+<style>
 
-  /* pri */
-  .container .menus-dialog .el-dialog{
-    max-width: 500px;
-  }
 </style>
 
 <script>
   export default {
+    mounted () {
+      this.getMenus()
+    },
+    data() {
+      return {
+        filterText: '',
+        menuNameValue: '',
+        menusData: [],
+        menusSelect: [],
+        defaultProps: {
+          children: 'child',
+          label: 'menuname'
+        },
+        dialogFormVisible: false,
+        selectValue: ''
+      }
+    },
     watch: {
+      // 筛选菜单节点
       filterText(val) {
         this.$refs.menustree.filter(val);
       }
     },
     methods: {
+      // 筛选菜单节点
       filterNode(value, data) {
         if (!value) return true;
         return data.menuname.indexOf(value) !== -1;
       },
+      // 删除菜单
       deleteMenus() {
         var that = this
         let checkedNodes = this.$refs.menustree.getCheckedNodes()
@@ -139,6 +123,7 @@
         }).catch(() => {
         });
       },
+      // 获取菜单列表
       getMenus() {
         var that = this
         this.axios.get('menus')
@@ -159,6 +144,7 @@
             console.log(error)
           })
       },
+      // 添加菜单
       addMenu(formName) {
         var that = this
         this.$refs[formName].validate((valid) => {
@@ -186,25 +172,29 @@
             return false;
           }
         })
-      }
-    },
-    mounted () {
-      this.getMenus()
-    },
-    data() {
-      return {
-        filterText: '',
-        menuNameValue: '',
-        menusData: [],
-        menusSelect: [],
-        defaultProps: {
-          children: 'child',
-          label: 'menuname'
-        },
-        labelPosition: 'left',
-        dialogFormVisible: false,
-        selectValue: ''
+      },
+      // 添加菜单节点
+      append(store, data) {
+        store.append({ id: id++, label: 'testtest', children: [] }, data);
+      },
+
+      // 删除菜单节点
+      remove(store, data) {
+        store.remove(data);
+      },
+      // 渲染函数
+      renderContent(h, { node, data, store }) {
+        return (
+          <span>
+            <span>
+              <span>{node.label}</span>
+            </span>
+            <span style="float: right; margin-right: 20px">
+              <el-button size="mini" on-click={ () => this.append(store, data) }>Append</el-button>
+              <el-button size="mini" on-click={ () => this.remove(store, data) }>Delete</el-button>
+            </span>
+          </span>);
       }
     }
-  };
+  }
 </script>

@@ -28,9 +28,9 @@
                   <ul class="nav side-menu">
                     <li><a><i class="fa fa-home"></i>系统管理<span class="fa fa-chevron-down"></span></a>
                       <ul class="nav child_menu">
-                        <!-- <router-link :to="{ path: '/hello' }" tag="li" >
+                        <router-link :to="{ path: '/user' }" tag="li" >
                           <a>用户管理</a>
-                        </router-link> -->
+                        </router-link>
                         <router-link :to="{ path: '/menu' }" tag="li" >
                           <a>菜单管理</a>
                         </router-link>
