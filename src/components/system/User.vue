@@ -9,8 +9,8 @@
 
     <!-- 头部查询 -->
     <div class="query-head">
-      <el-input placeholder="输入关键字过滤" v-model.trim="query.search" @keyup.enter.native="query()"></el-input>
-      <el-button type="info" icon="search" @click="query()">查询</el-button>
+      <el-input placeholder="输入关键字过滤" v-model.trim="query.search" @keyup.enter.native="getUsers()"></el-input>
+      <el-button type="info" icon="search" @click="getUsers()">查询</el-button>
       <el-button type="info" @click="addUsers()">
         <i class="el-icon-plus"></i>添加用户
       </el-button>
@@ -150,10 +150,6 @@
       formReset() {
         this.$refs['userForm']?this.$refs['userForm'].resetFields():''
       },
-      // 查询
-      query() {
-        this.getUsers()
-      },
       // 添加用户
       addUsers() {
         this.dialogFormVisible = true
@@ -175,7 +171,8 @@
         this.modifyPassword  = false
         this.userForm.id = e.row.id
         this.formReset()
-        this.userForm = e.row
+        let row = JSON.stringify(e.row)
+        this.userForm = JSON.parse(row)
         //this.getUserById()
       },
       // 点击修改密码
@@ -260,7 +257,7 @@
             })
           })
       },
-      // 获取用户列表
+      // 查询用户列表
       getUsers() {
         let that = this
         that.axios.get(`employees?order=${that.query.order}&prop=${that.query.prop}&page=${that.query.pageIndex}&pagesize=${that.query.pageSize}&search=${that.query.search}`)

@@ -8,8 +8,9 @@ import Hello from './components/Hello'
 import Echarts from './components/Echarts'
 
 let routes = [
-   { path: '/', component: Index },
+   { path: '/', component: Example },
     { path: '/login', component: Login },
+    { path: '/index', component: Index },
     { path: '/role', component: Role },
     { path: '/user', component: User },
     { path: '/menu', component: Menu },
