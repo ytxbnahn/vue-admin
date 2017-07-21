@@ -9,7 +9,7 @@ export default {
   name: 'sell',
   data () {
     return {
-      msg: 'Index11111111'
+      msg: ''
     }
   }
 }

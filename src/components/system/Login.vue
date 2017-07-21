@@ -16,9 +16,9 @@
 </template>
 
 <script>
-require('../css/login.css')
+require('../../css/login.css')
 
-import auth from '../auth'
+import auth from '../../auth'
 import series from 'async/series'
 
 export default {
@@ -65,8 +65,8 @@ export default {
             this.$router.push('/')
           })
         } else {
-            return false;
-          }
+          return false
+        }
       })
     }
   }
