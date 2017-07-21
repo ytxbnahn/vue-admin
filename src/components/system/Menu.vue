@@ -20,7 +20,7 @@
       default-expand-all
       highlight-current
       :filter-node-method="filterNode"
-      ref="menustree" :render-content="renderContent">
+      ref="menustree" ><!-- :render-content="renderContent" -->
     </el-tree>
     <el-dialog class="menus-dialog" title="添加菜单" :visible.sync="dialogFormVisible">
       <el-form :label-position="'left'" ref="menuForm" label-width="80px" >
@@ -55,7 +55,7 @@
     mounted () {
       this.getMenus()
     },
-    data() {
+    data () {
       return {
         filterText: '',
         menuNameValue: '',
@@ -71,18 +71,18 @@
     },
     watch: {
       // 筛选菜单节点
-      filterText(val) {
-        this.$refs.menustree.filter(val);
+      filterText (val) {
+        this.$refs.menustree.filter(val)
       }
     },
     methods: {
       // 筛选菜单节点
-      filterNode(value, data) {
-        if (!value) return true;
-        return data.menuname.indexOf(value) !== -1;
+      filterNode (value, data) {
+        if (!value) return true
+        return data.menuname.indexOf(value) !== -1
       },
       // 删除菜单
-      deleteMenus() {
+      deleteMenus () {
         var that = this
         let checkedNodes = this.$refs.menustree.getCheckedNodes()
         if (!checkedNodes.length) {
@@ -93,23 +93,22 @@
           return
         }
         let deleteIDs = []
-        $.each(checkedNodes, function(index, val) {
-          deleteIDs.push(val.id)
-        })
-        console.log(deleteIDs)
+        for (var i = 0; i < checkedNodes.length; i++) {
+          deleteIDs.push(checkedNodes[i].id)
+        }
         this.$confirm('是否确认删除菜单?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.axios.put('menusdel',{id: JSON.stringify(deleteIDs)})
-            .then(function(res) {
+          this.axios.put('menusdel', {id: JSON.stringify(deleteIDs)})
+            .then(function (res) {
               if (res.data.success) {
                 that.getMenus()
                 this.$message({
                   type: 'success',
                   message: '删除成功!'
-                });
+                })
               } else {
                 that.$message({
                   message: res.data.msg,
@@ -117,73 +116,72 @@
                 })
               }
             })
-            .catch(function(error) {
+            .catch(function (error) {
               console.log(error)
             })
         }).catch(() => {
-        });
+        })
       },
       // 获取菜单列表
-      getMenus() {
+      getMenus () {
         var that = this
         this.axios.get('menus')
-          .then(function(res) {
+          .then(function (res) {
             if (res.data.success) {
               that.menusData = res.data.info
               let selectData = JSON.stringify(res.data.info)
               that.menusSelect = JSON.parse(selectData)
-              that.menusSelect.unshift({id: 0,menuname: '根菜单'})
-            }else{
+              that.menusSelect.unshift({id: 0, menuname: '根菜单'})
+            } else {
               that.$message({
                 message: res.data.msg,
                 type: 'error'
               })
             }
           })
-          .catch(function(error) {
+          .catch(function (error) {
             console.log(error)
           })
       },
       // 添加菜单
-      addMenu(formName) {
+      addMenu (formName) {
         var that = this
         this.$refs[formName].validate((valid) => {
           if (valid) {
             this.axios.post('menus', {
-                id: that.selectValue,
-                menuname: that.menuNameValue
-              })
-              .then(function(res) {
-                if (res.data.success) {
-                  that.dialogFormVisible = false
-                  that.getMenus()
-                  this.$refs[formName].resetFields()
-                } else {
-                  that.$message({
-                    message: res.data.msg,
-                    type: 'error'
-                  })
-                }
-              })
-              .catch(function(error) {
-                console.log(error)
-              })
+              id: that.selectValue,
+              menuname: that.menuNameValue
+            })
+            .then(function (res) {
+              if (res.data.success) {
+                that.dialogFormVisible = false
+                that.getMenus()
+                this.$refs[formName].resetFields()
+              } else {
+                that.$message({
+                  message: res.data.msg,
+                  type: 'error'
+                })
+              }
+            })
+            .catch(function (error) {
+              console.log(error)
+            })
           } else {
-            return false;
+            return false
           }
         })
       },
       // 添加菜单节点
-      append(store, data) {
-        store.append({ id: id++, label: 'testtest', children: [] }, data);
+      append (store, data) {
       },
 
       // 删除菜单节点
-      remove(store, data) {
-        store.remove(data);
+      remove (store, data) {
+        store.remove(data)
       },
       // 渲染函数
-      renderContent(h, { node, data, store }) {
+      renderContent (h, { node, data, store }) {
         return (
           <span>
             <span>
@@ -193,7 +191,7 @@
               <el-button size="mini" on-click={ () => this.append(store, data) }>Append</el-button>
               <el-button size="mini" on-click={ () => this.remove(store, data) }>Delete</el-button>
             </span>
-          </span>);
+          </span>)
       }
     }
   }

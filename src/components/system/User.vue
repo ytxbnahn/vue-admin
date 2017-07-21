@@ -79,22 +79,22 @@
 
 <script>
   export default {
-    data() {
+    data () {
       // 确认密码验证
       var validateRePass = (rule, value, callback) => {
         if (value === '') {
-          callback(new Error('请再次输入密码'));
+          callback(new Error('请再次输入密码'))
         } else if (value !== this.userForm.password) {
-          callback(new Error('两次输入密码不一致!'));
+          callback(new Error('两次输入密码不一致!'))
         } else {
-          callback();
+          callback()
         }
       }
       return {
         // 错误提示
-        errorMsg: '系统错误，请联系管理员', 
+        errorMsg: '系统错误，请联系管理员',
         // 查询对象
-        query: { 
+        query: {
           order: '',
           prop: '',
           search: '',
@@ -103,11 +103,11 @@
           total: 0
         },
         // 角色数据
-        roleData: [], 
+        roleData: [],
         // 是否修改密码
         modifyPassword: false,
         // 用户表单对象
-        userForm: { 
+        userForm: {
           id: '',
           name: '',
           email: '',
@@ -116,11 +116,11 @@
           role_id: ''
         },
         // 用户列表数据
-        userData: [], 
+        userData: [],
         // 用户表单验证规则
         userRules: {
           role_id: [
-            { type: 'number',required: true, message: '请选择用户角色', trigger: 'change'}
+            { type: 'number', required: true, message: '请选择用户角色', trigger: 'change' }
           ],
           name: [
             { required: true, message: '请输入用户名称', trigger: 'blur' },
@@ -133,7 +133,7 @@
             { required: true, message: '请输入用户密码', trigger: 'blur' }
           ],
           repassword: [
-            { validator: validateRePass, trigger: 'blur' }
+            { required: true, validator: validateRePass, trigger: 'blur' }
           ]
         },
         // 弹框显示控制
@@ -147,14 +147,14 @@
     },
     methods: {
       // 表单重置
-      formReset() {
-        this.$refs['userForm']?this.$refs['userForm'].resetFields():''
+      formReset () {
+        this.$refs['userForm'] ? this.$refs['userForm'].resetFields() : ''
       },
       // 添加用户
-      addUsers() {
+      addUsers () {
         this.dialogFormVisible = true
         this.getRoles()
-        this.userForm = { 
+        this.userForm = {
           id: '',
           name: '',
           email: '',
@@ -165,44 +165,41 @@
         this.formReset()
       },
       // 点击编辑事件
-      editClick(e) {
+      editClick (e) {
         this.getRoles()
         this.dialogFormVisible = true
-        this.modifyPassword  = false
+        this.modifyPassword = false
         this.userForm.id = e.row.id
         this.formReset()
-        let row = JSON.stringify(e.row)
-        this.userForm = JSON.parse(row)
-        //this.getUserById()
+        this.getUserById()
       },
       // 点击修改密码
-      modifyPSW() {
+      modifyPSW () {
         this.modifyPassword = !this.modifyPassword
         this.formReset()
       },
       // 分页页码改变事件
-      handleSizeChange(e) {
+      handleSizeChange (e) {
         this.query.pageSize = e
         this.getUsers()
       },
       // 分页索引改变事件
-      handleCurrentChange(e) {
+      handleCurrentChange (e) {
         this.query.pageIndex = e
         this.getUsers()
       },
       // 自定义排序
-      sortChange(e){
-        console.log("sortchange",e)
+      sortChange (e) {
         this.query.order = e.order || ''
         this.query.prop = e.prop || ''
         this.getUsers()
       },
-       handleSelectionChange(e) {
-        console.log("handleSelectionChange",e)
-        this.multipleSelection = e;
+      handleSelectionChange (e) {
+        console.log('handleSelectionChange', e)
+        this.multipleSelection = e
       },
       // 删除用户
-      deleteUser(e) {
+      deleteUser (e) {
         let that = this
         let deleteID = e.row.id
         this.$confirm('是否确认删除用户?', '提示', {
@@ -210,8 +207,8 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.axios.put('employeesdel',{id: deleteID})
-            .then(function(res) {
+          this.axios.put('employeesdel', {id: deleteID})
+            .then(function (res) {
               if (res.data.success) {
                 that.getUsers()
                 that.$message({
@@ -225,7 +222,7 @@
                 })
               }
             })
-            .catch(function(error) {
+            .catch(function () {
               that.$message({
                 message: that.errorMsg,
                 type: 'error'
@@ -236,13 +233,13 @@
         })
       },
       // 根据用户ID查询用户详细
-      getUserById() {
+      getUserById () {
         let that = this
         that.axios.get(`employeesGetByID?id=${that.userForm.id}`)
-          .then(function(res) {
+          .then(function (res) {
             if (res.data.success) {
               that.userForm = res.data.info
-              console.log(" that.userForm", that.userForm)
+              console.log('that.userForm', that.userForm)
             } else {
               that.$message({
                 message: res.data.msg,
@@ -250,7 +247,7 @@
               })
             }
           })
-          .catch(function(error) {
+          .catch(function () {
             that.$message({
               message: that.errorMsg,
               type: 'error'
@@ -258,10 +255,10 @@
           })
       },
       // 查询用户列表
-      getUsers() {
+      getUsers () {
         let that = this
         that.axios.get(`employees?order=${that.query.order}&prop=${that.query.prop}&page=${that.query.pageIndex}&pagesize=${that.query.pageSize}&search=${that.query.search}`)
-          .then(function(res) {
+          .then(function (res) {
             if (res.data.success) {
               that.userData = res.data.info
               that.query.total = res.data.total
@@ -272,7 +269,7 @@
               })
             }
           })
-          .catch(function(error) {
+          .catch(function () {
             that.$message({
               message: that.errorMsg,
               type: 'error'
@@ -280,10 +277,10 @@
           })
       },
       // 获取角色列表
-      getRoles() {
+      getRoles () {
         let that = this
         that.axios.get('staff')
-          .then(function(res) {
+          .then(function (res) {
             if (res.data.success) {
               that.roleData = res.data.info
             } else {
@@ -293,7 +290,7 @@
               })
             }
           })
-          .catch(function(error) {
+          .catch(function () {
             that.$message({
               message: that.errorMsg,
               type: 'error'
@@ -301,7 +298,7 @@
           })
       },
       // 保存用户
-      saveUser() {
+      saveUser () {
         let that = this
         let formName = 'userForm'
         that.$refs[formName].validate((valid) => {
@@ -312,9 +309,9 @@
               name: that.userForm.name,
               email: that.userForm.email,
               password: that.userForm.password,
-              password_confirmation: that.userForm.repassword,
+              password_confirmation: that.userForm.repassword
             })
-            .then(function(res) {
+            .then(function (res) {
               if (res.data.success) {
                 that.dialogFormVisible = false
                 that.getUsers()
@@ -326,14 +323,14 @@
                 })
               }
             })
-            .catch(function(error) {
+            .catch(function () {
               that.$message({
                 message: that.errorMsg,
                 type: 'error'
               })
             })
           } else {
-            return false;
+            return false
           }
         })
       }

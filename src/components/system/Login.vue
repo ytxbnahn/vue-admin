@@ -65,8 +65,8 @@ export default {
             this.$router.push('/')
           })
         } else {
-            return false;
-          }
+          return false
+        }
       })
     }
   }
