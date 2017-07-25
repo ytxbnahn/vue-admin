@@ -23,13 +23,13 @@ module.exports = {
   },
   dev: {
     env: require('./dev.env'),
-    port: 8980,
+    port: 8080,
     autoOpenBrowser: true,
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
       '/admin': {
-        target: 'http://lara.chlzn.cn2222',
+        target: 'http://lara.chlzn.cn',
         changeOrigin: true,
         pathRewrite: {
           '^/admin': '/admin'
